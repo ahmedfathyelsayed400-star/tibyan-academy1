@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/* فرض خط القاهرة على كل وسم وعنصر داخل الموقع بالكامل لمنع أي تجاهل */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-cairo), Arial, sans-serif !important;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background: #ffffff;
+  color: #000000;
+  /* تطبيق خط القاهرة المستوحى من موقع الإمام */
+  font-family: var(--font-cairo), Arial, sans-serif !important;
+}
+
+/* تأكيد إضافي للعناوين الكبيرة والفقرات والأزرار */
+h1, h2, h3, h4, h5, h6, p, span, a, button {
+  font-family: var(--font-cairo), Arial, sans-serif !important;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+::selection {
+  background: #f59e0b;
+  color: #000000;
+}
+
+/* تخصيص السكرول بار */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+::-webkit-scrollbar-thumb {
+  background: #d97706;
+  border-radius: 10px;
+}
