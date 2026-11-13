@@ -3,6 +3,7 @@ import { Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
+import TopBanner from "@/components/TopBanner";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -28,6 +29,7 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={false}
         >
+          <TopBanner />
           {children}
 
           {/* Footer */}
