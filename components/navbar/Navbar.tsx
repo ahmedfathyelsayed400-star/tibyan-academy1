@@ -6,13 +6,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Sparkles, Volume2, VolumeX, X, RotateCcw } from "lucide-react";
 import { dict } from "./translations";
-import TopBanner from "../TopBanner";
 
 export default function Navbar() {
   const pathname = usePathname();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState<"ar" | "en">("ar");
+
+  // حالات شريط التايمر
+  const [showBanner, setShowBanner] = useState(true);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // حالات الفيديو العائم
   const [isPlaying, setIsPlaying] = useState(false);
@@ -24,6 +27,28 @@ export default function Navbar() {
   const floatingVideoRef = useRef<HTMLVideoElement>(null);
 
   const t = dict[currentLang] || dict.ar;
+
+  // تشغيل العد التنازلي
+  useEffect(() => {
+    const targetDate = new Date("2026-12-01T23:59:59").getTime();
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      }
+    };
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const savedLang = localStorage.getItem("site_lang") as "ar" | "en";
@@ -48,7 +73,6 @@ export default function Navbar() {
     window.scrollTo({ top: section.getBoundingClientRect().top + window.scrollY - 150, behavior: "smooth" });
   };
 
-  // تشغيل الفيديو تلقائياً وبصوت عند أول تفاعل أو لمسة على الجوال أو اللابتوب
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -61,7 +85,7 @@ export default function Navbar() {
           setIsPlaying(true);
           setIsMuted(false);
           events.forEach((event) => window.removeEventListener(event, handleTouchPlay));
-        }).catch((error) => {
+        }).catch(() => {
           if (floatingVideoRef.current) {
             floatingVideoRef.current.muted = true;
             floatingVideoRef.current.play().then(() => {
@@ -73,7 +97,6 @@ export default function Navbar() {
               }
             });
           }
-          console.log("خطأ في التشغيل:", error);
         });
       }
     };
@@ -195,7 +218,7 @@ export default function Navbar() {
                   
                   {dropdownOpen && (
                     <div 
-                      className={`absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-3 w-72 sm:w-80 z-[999] text-${currentLang === "ar" ? "right" : "left"}`}
+                      className={`absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-3 w-72 sm:w-80 z-50 text-${currentLang === "ar" ? "right" : "left"}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {courseCategories.map((cat, idx) => (
@@ -212,9 +235,8 @@ export default function Navbar() {
                   )}
                 </div>
 
-                {/* المصحف الإلكتروني */}
                 <Link 
-                  href="https://quran.com/reciters" 
+                  href="https://quran.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="py-1 transition-colors duration-200 hover:text-[#eab308]"
@@ -222,10 +244,3 @@ export default function Navbar() {
                   {currentLang === "ar" ? "المصحف الإلكتروني" : "E-Quran"}
                 </Link>
 
-                <Link href="/payment" className={`py-1 transition-colors duration-200 ${pathname === "/payment" ? "border-b-2 border-[#eab308] text-[#eab308] font-bold" : "hover:text-[#eab308]"}`}>
-                  {currentLang === "ar" ? "الدفع الإلكتروني" : "E-Payment"}
-                </Link>
-
-                <button type="button" onClick={() => scrollToSection("app")} className="flex items-center gap-1 bg-transparent border-0 font-semibold cursor-pointer text-gray-700 transition-colors hover:text-[#00754A]">
-                  <span>{t.app}</span>
-                  <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[11px] font-extrabold bg-emerald-50 text-[#00754A] border border-emerald-200 px-1.5 py-0.5 rounded-full shadow-sm">
