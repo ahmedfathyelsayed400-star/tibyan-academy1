@@ -259,7 +259,155 @@ export default function Navbar() {
                         >
                           {cat.name}
                         </Link>
-                      ))}
+                      ))} 
+                      {currentLang === "ar" ? "المصحف الإلكتروني" : "E-Quran"}
+{currentLang === "ar" ? "الدفع الإلكتروني" : "E-Payment"}
+<button
+type="button"
+onClick={() => scrollToSection("app")}
+className="flex items-center gap-1 bg-transparent border-0 font-semibold cursor-pointer text-gray-700 transition-colors hover:text-[#00754A]"
+>
+{t.app}
+
+
+{t.soon}
+
+<button
+type="button"
+onClick={() => scrollToSection("faqs")}
+className="bg-transparent border-0 font-semibold cursor-pointer text-gray-700 transition-colors hover:text-[#eab308]"
+>
+{t.faqs}
+
+
+{showBanner && (
+<div
+dir="rtl"
+style={{
+backgroundColor: "#2d2d2d",
+color: "#ffffff",
+width: "100%",
+padding: "8px 16px",
+borderBottom: "1px solid #444",
+boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+}}
+>
+<div
+style={{
+maxWidth: "1280px",
+margin: "0 auto",
+display: "flex",
+flexWrap: "wrap",
+alignItems: "center",
+justifyContent: "space-between",
+gap: "12px",
+}}
+>
+<div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+<span
+style={{
+backgroundColor: "#facc15",
+color: "#000000",
+fontWeight: "800",
+fontSize: "13px",
+padding: "4px 12px",
+borderRadius: "6px",
+}}
+>
+عرض خاص
+<div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+<div style={{ display: "flex", alignItems: "center", gap: "6px" }} dir="ltr">
+{[
+{ value: timeLeft.days, label: "يوم" },
+{ value: timeLeft.hours, label: "ساعة" },
+{ value: timeLeft.minutes, label: "دقيقة" },
+{ value: timeLeft.seconds, label: "ثانية" },
+].map((item, idx) => (
+<div key={item.label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+<div
+style={{
+backgroundColor: "#454545",
+borderRadius: "6px",
+width: "42px",
+height: "42px",
+display: "flex",
+flexDirection: "column",
+alignItems: "center",
+justifyContent: "center",
+}}
+>
+<span style={{ fontSize: "14px", fontWeight: "bold", lineHeight: "1", color: "#fff" }}>
+{String(item.value).padStart(2, "0")}
+
+<span style={{ fontSize: "10px", color: "#d1d5db", marginTop: "3px" }}>
+{item.label}
+
+
+{idx < 3 && <span style={{ color: "#9ca3af", fontWeight: "bold" }}>:}
+
+))}
+<button
+type="button"
+onClick={() => setShowBanner(false)}
+aria-label="إغلاق الشريط"
+style={{
+width: "28px",
+height: "28px",
+borderRadius: "50%",
+backgroundColor: "#454545",
+color: "#d1d5db",
+border: "none",
+cursor: "pointer",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+fontSize: "12px",
+}}
+>
+✕
+
+
+
+
+)}
+<div className={showBanner ? "h-40" : "h-24"}>
+{!isClosed && (
+<div
+className={fixed bottom-4 ${ currentLang === "ar" ? "left-20 sm:left-24" : "right-20 sm:right-24" } z-50 w-80 sm:w-96 bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400 cursor-pointer transition-transform duration-300 hover:scale-[1.01]}
+onClick={togglePlayState}
+>
+<div
+className="h-full bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-150 rounded-full"
+style={{ width: ${progress}% }}
+>
+{isNearEnd && (
+
+
+
+
+
+إعادة عرض الفيديو
+
+
+)}
+أكاديمية تبيان
+
+<button
+type="button"
+onClick={toggleMute}
+className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all duration-200 shadow-2xl border-2 border-white flex items-center justify-center cursor-pointer"
+title={isMuted ? "إلغاء كتم الصوت" : "كتم الصوت"}
+>
+{isMuted ?  : }
+
+
+
+
+
+)}
+</>
+);
+}
                     </div>
                   )}
                 </div>
