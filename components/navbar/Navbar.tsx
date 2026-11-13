@@ -13,22 +13,19 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState<"ar" | "en">("ar");
 
-  // حالات شريط التايمر
   const [showBanner, setShowBanner] = useState(true);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // حالات الفيديو العائم
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true); 
-  const [isClosed, setIsClosed] = useState(false); 
-  const [isNearEnd, setIsNearEnd] = useState(false); 
+  const [isMuted, setIsMuted] = useState(true);
+  const [isClosed, setIsClosed] = useState(false);
+  const [isNearEnd, setIsNearEnd] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const floatingVideoRef = useRef<HTMLVideoElement>(null);
 
   const t = dict[currentLang] || dict.ar;
 
-  // تشغيل العد التنازلي
   useEffect(() => {
     const targetDate = new Date("2026-12-01T23:59:59").getTime();
     const updateTimer = () => {
@@ -80,24 +77,27 @@ export default function Navbar() {
       if (floatingVideoRef.current && !isClosed && !isPlaying) {
         floatingVideoRef.current.muted = false;
         floatingVideoRef.current.volume = 1.0;
-        
-        floatingVideoRef.current.play().then(() => {
-          setIsPlaying(true);
-          setIsMuted(false);
-          events.forEach((event) => window.removeEventListener(event, handleTouchPlay));
-        }).catch(() => {
-          if (floatingVideoRef.current) {
-            floatingVideoRef.current.muted = true;
-            floatingVideoRef.current.play().then(() => {
-              setIsPlaying(true);
-              setIsMuted(true);
-              if (floatingVideoRef.current) {
-                floatingVideoRef.current.muted = false;
-                setIsMuted(false);
-              }
-            });
-          }
-        });
+
+        floatingVideoRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+            setIsMuted(false);
+            events.forEach((event) => window.removeEventListener(event, handleTouchPlay));
+          })
+          .catch(() => {
+            if (floatingVideoRef.current) {
+              floatingVideoRef.current.muted = true;
+              floatingVideoRef.current.play().then(() => {
+                setIsPlaying(true);
+                setIsMuted(true);
+                if (floatingVideoRef.current) {
+                  floatingVideoRef.current.muted = false;
+                  setIsMuted(false);
+                }
+              });
+            }
+          });
       }
     };
 
@@ -113,10 +113,10 @@ export default function Navbar() {
     if (floatingVideoRef.current) {
       const current = floatingVideoRef.current.currentTime;
       const duration = floatingVideoRef.current.duration;
-      
+
       if (duration) {
         setProgress((current / duration) * 100);
-        
+
         if (current >= duration - 3) {
           floatingVideoRef.current.pause();
           setIsPlaying(false);
@@ -153,7 +153,7 @@ export default function Navbar() {
       const nextMuteState = !isMuted;
       floatingVideoRef.current.muted = nextMuteState;
       setIsMuted(nextMuteState);
-      
+
       if (!nextMuteState) {
         floatingVideoRef.current.play().catch(() => {});
       }
@@ -184,47 +184,76 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 z-50 w-full">
-        <header className="w-full bg-white border-b border-gray-100 shadow-sm h-24 relative" dir={currentLang === "ar" ? "rtl" : "ltr"}>
+        <header
+          className="w-full bg-white border-b border-gray-100 shadow-sm h-24 relative"
+          dir={currentLang === "ar" ? "rtl" : "ltr"}
+        >
           <nav className="mx-auto flex h-full max-w-7xl items-center justify-between relative px-4 sm:px-6">
-            
             <div className="flex items-center gap-3 sm:gap-6 xl:gap-10 flex-1 justify-start h-full relative w-full">
-              
               <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
-                <Image src="/images/logo/logo.png" alt="شعار أكاديمية تبيان" width={60} height={60} priority className="object-contain sm:w-[75px] sm:h-[75px]" />
+                <Image
+                  src="/images/logo/logo.png"
+                  alt="شعار أكاديمية تبيان"
+                  width={60}
+                  height={60}
+                  priority
+                  className="object-contain sm:w-[75px] sm:h-[75px]"
+                />
                 <div className={`text-${currentLang === "ar" ? "right" : "left"} hidden md:block`}>
-                  <h1 className="text-lg sm:text-xl font-bold text-black leading-tight">{currentLang === "ar" ? "أكاديمية تبيان" : "Tibyan Academy"}</h1>
+                  <h1 className="text-lg sm:text-xl font-bold text-black leading-tight">
+                    {currentLang === "ar" ? "أكاديمية تبيان" : "Tibyan Academy"}
+                  </h1>
                   <p className="text-[10px] sm:text-xs font-medium text-[#eab308]">Tibyan Quran Academy</p>
                 </div>
               </Link>
 
               <div className="flex items-center gap-4 sm:gap-5 font-semibold text-[14px] sm:text-[15px] text-gray-700 h-full overflow-x-auto no-scrollbar whitespace-nowrap flex-1 lg:flex-none px-2">
-                <Link href="/" className={`py-1 transition-colors duration-200 ${pathname === "/" ? "border-b-2 border-[#eab308] text-[#eab308] font-bold" : "hover:text-[#eab308]"}`}>
+                <Link
+                  href="/"
+                  className={`py-1 transition-colors duration-200 ${
+                    pathname === "/" ? "border-b-2 border-[#eab308] text-[#eab308] font-bold" : "hover:text-[#eab308]"
+                  }`}
+                >
                   {t.home}
                 </Link>
 
-                <Link href="/about" className={`py-1 transition-colors duration-200 ${pathname === "/about" ? "border-b-2 border-[#eab308] text-[#eab308] font-bold" : "hover:text-[#eab308]"}`}>
+                <Link
+                  href="/about"
+                  className={`py-1 transition-colors duration-200 ${
+                    pathname === "/about"
+                      ? "border-b-2 border-[#eab308] text-[#eab308] font-bold"
+                      : "hover:text-[#eab308]"
+                  }`}
+                >
                   {t.about}
                 </Link>
 
-                {/* قائمة دوراتنا المنسدلة لأسفل */}
-                <div 
+                <div
                   className="relative h-full flex items-center cursor-pointer select-none"
                   onClick={handleDropdownToggle}
                 >
-                  <div className="flex items-center gap-1 transition-colors duration-200 py-1" style={{ color: dropdownOpen || pathname.startsWith("/courses") ? '#eab308' : '' }}>
+                  <div
+                    className="flex items-center gap-1 transition-colors duration-200 py-1"
+                    style={{ color: dropdownOpen || pathname.startsWith("/courses") ? "#eab308" : "" }}
+                  >
                     <span>{t.courses}</span>
-                    <ChevronDown size={14} className={`transform transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown
+                      size={14}
+                      className={`transform transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                    />
                   </div>
-                  
+
                   {dropdownOpen && (
-                    <div 
-                      className={`absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-3 w-72 sm:w-80 z-50 text-${currentLang === "ar" ? "right" : "left"}`}
+                    <div
+                      className={`absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-3 w-72 sm:w-80 z-50 text-${
+                        currentLang === "ar" ? "right" : "left"
+                      }`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {courseCategories.map((cat, idx) => (
-                        <Link 
-                          key={idx} 
-                          href={cat.path} 
+                        <Link
+                          key={idx}
+                          href={cat.path}
                           className="block px-4 py-3 text-gray-700 text-[13px] sm:text-[14px] hover:bg-amber-50 hover:text-[#eab308] transition-colors font-medium border-b border-gray-50 last:border-0"
                           onClick={() => setDropdownOpen(false)}
                         >
@@ -234,13 +263,4 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
-
-                <Link 
-                  href="https://quran.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="py-1 transition-colors duration-200 hover:text-[#eab308]"
-                >
-                  {currentLang === "ar" ? "المصحف الإلكتروني" : "E-Quran"}
-                </Link>
 
